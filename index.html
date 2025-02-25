@@ -4,505 +4,405 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relationship Compatibility Questionnaire</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF Generation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root {
-            --primary-color: #4a6fa5;
-            --secondary-color: #f9f9f9;
-            --accent-color: #e63946;
-            --text-color: #333;
-            --border-color: #ddd;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: #f5f7fa;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary-color);
-        }
-        
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-        
-        .description {
-            color: #666;
-            font-style: italic;
-        }
-        
-        h2 {
-            color: var(--primary-color);
-            border-left: 4px solid var(--accent-color);
-            padding-left: 10px;
-            margin-top: 30px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            background-color: var(--secondary-color);
-            padding: 20px;
-            border-radius: 5px;
-        }
-        
-        .question {
-            margin-bottom: 20px;
-        }
-        
-        .ranking-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 8px;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .ranking-item:hover {
-            background-color: #f0f4f8;
-        }
-        
-        .ranking-item label {
-            flex-grow: 1;
-            margin-left: 10px;
-        }
-        
-        input[type="number"], input[type="text"], textarea, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 16px;
-            margin-top: 5px;
-            box-sizing: border-box;
-        }
-        
-        input[type="number"] {
-            width: 60px;
-        }
-        
-        .comm-prefs {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .comm-prefs input {
-            margin-right: 10px;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: inline-block;
-            margin-right: 10px;
-            margin-top: 20px;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #3a5a80;
-        }
-        
-        .download-btn {
-            background-color: var(--accent-color);
-        }
-        
-        .download-btn:hover {
-            background-color: #c1272d;
-        }
-        
-        .buttons {
-            text-align: center;
-            margin-top: 30px;
-        }
-        
-        .hint {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-            font-style: italic;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 10px;
-            }
-            
-            input[type="text"], textarea {
-                font-size: 16px; /* Prevents zoom on mobile */
-            }
-        }
-        
-        /* For PDF generation - hidden until printing */
-        .pdf-header {
-            display: none;
-        }
-        
+        /* Custom styles that can't be handled by Tailwind */
         @media print {
             .no-print {
                 display: none !important;
             }
-            
-            .pdf-header {
-                display: block;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-            
-            body {
-                background-color: white;
-            }
-            
-            .container {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-            }
         }
     </style>
 </head>
-<body>
-    <div class="container" id="questionnaire-form">
-        <header>
-            <h1>Relationship Compatibility Questionnaire</h1>
-            <p class="description">Complete this questionnaire to explore compatibility factors in your relationship</p>
-        </header>
-        
-        <div class="section">
-            <h2>Part 1: Personal Values Ranking</h2>
-            <p>Rank the following life priorities from 1 (highest priority) to 10 (lowest priority):</p>
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto px-4 py-8 max-w-4xl" id="questionnaire-container">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8" id="questionnaire-form">
+            <header class="text-center mb-8 pb-4 border-b border-blue-500">
+                <h1 class="text-3xl font-bold text-blue-700 mb-2">Relationship Compatibility Questionnaire</h1>
+                <p class="text-gray-600 italic">Complete this questionnaire to explore compatibility factors in your relationship</p>
+            </header>
             
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="career-rank" name="career-rank">
-                <label for="career-rank">Career/Professional growth</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="financial-rank" name="financial-rank">
-                <label for="financial-rank">Financial security</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="hobbies-rank" name="hobbies-rank">
-                <label for="hobbies-rank">Personal hobbies and interests</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="friends-rank" name="friends-rank">
-                <label for="friends-rank">Time with friends</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="family-rank" name="family-rank">
-                <label for="family-rank">Time with family</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="physical-rank" name="physical-rank">
-                <label for="physical-rank">Physical health and fitness</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="mental-rank" name="mental-rank">
-                <label for="mental-rank">Mental and emotional wellbeing</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="spiritual-rank" name="spiritual-rank">
-                <label for="spiritual-rank">Spiritual or philosophical growth</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="travel-rank" name="travel-rank">
-                <label for="travel-rank">Travel and new experiences</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="10" id="home-rank" name="home-rank">
-                <label for="home-rank">Home and domestic life</label>
-            </div>
-        </div>
-        
-        <div class="section">
-            <h2>Part 2: Relationship Expectations</h2>
-            
-            <div class="question">
-                <h3>Time Together vs. Independence</h3>
-                <label for="days-together">How many days per week do you ideally want to spend with your partner?</label>
-                <input type="number" min="0" max="7" id="days-together" name="days-together">
+            <!-- Part 1: Personal Values Ranking -->
+            <div class="mb-8 bg-gray-50 p-6 rounded-md">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 pl-3 border-l-4 border-red-500">Part 1: Personal Values Ranking</h2>
+                <p class="mb-4">Rank the following life priorities from 1 (highest priority) to 10 (lowest priority):</p>
                 
-                <label for="activities-together">What activities do you prefer to do together?</label>
-                <textarea id="activities-together" name="activities-together" rows="3"></textarea>
-                
-                <label for="activities-independent">What activities do you prefer to do independently?</label>
-                <textarea id="activities-independent" name="activities-independent" rows="3"></textarea>
-                
-                <label for="recharge">How do you recharge after a difficult day?</label>
-                <textarea id="recharge" name="recharge" rows="3"></textarea>
-            </div>
-            
-            <div class="question">
-                <h3>Communication Preferences</h3>
-                <label for="comm-frequency">How often do you expect to communicate when apart?</label>
-                <input type="text" id="comm-frequency" name="comm-frequency">
-                
-                <p>Preferred communication methods (rank 1-5):</p>
-                
-                <div class="comm-prefs">
-                    <input type="number" min="1" max="5" id="text-rank" name="text-rank">
-                    <label for="text-rank">Text messages</label>
-                </div>
-                
-                <div class="comm-prefs">
-                    <input type="number" min="1" max="5" id="phone-rank" name="phone-rank">
-                    <label for="phone-rank">Phone calls</label>
-                </div>
-                
-                <div class="comm-prefs">
-                    <input type="number" min="1" max="5" id="video-rank" name="video-rank">
-                    <label for="video-rank">Video calls</label>
-                </div>
-                
-                <div class="comm-prefs">
-                    <input type="number" min="1" max="5" id="inperson-rank" name="inperson-rank">
-                    <label for="inperson-rank">In-person conversations</label>
-                </div>
-                
-                <div class="comm-prefs">
-                    <input type="number" min="1" max="5" id="written-rank" name="written-rank">
-                    <label for="written-rank">Written notes/letters</label>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="career-rank" name="career-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="career-rank" class="ml-3 flex-grow">Career/Professional growth</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="financial-rank" name="financial-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="financial-rank" class="ml-3 flex-grow">Financial security</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="hobbies-rank" name="hobbies-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="hobbies-rank" class="ml-3 flex-grow">Personal hobbies and interests</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="friends-rank" name="friends-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="friends-rank" class="ml-3 flex-grow">Time with friends</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="family-rank" name="family-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="family-rank" class="ml-3 flex-grow">Time with family</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="physical-rank" name="physical-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="physical-rank" class="ml-3 flex-grow">Physical health and fitness</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="mental-rank" name="mental-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="mental-rank" class="ml-3 flex-grow">Mental and emotional wellbeing</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="spiritual-rank" name="spiritual-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="spiritual-rank" class="ml-3 flex-grow">Spiritual or philosophical growth</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="travel-rank" name="travel-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="travel-rank" class="ml-3 flex-grow">Travel and new experiences</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="10" id="home-rank" name="home-rank" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="home-rank" class="ml-3 flex-grow">Home and domestic life</label>
+                    </div>
                 </div>
             </div>
             
-            <div class="question">
-                <h3>Future Planning</h3>
-                <label for="future-3">Where do you see yourself in 3 years?</label>
-                <textarea id="future-3" name="future-3" rows="2"></textarea>
+            <!-- Part 2: Relationship Expectations -->
+            <div class="mb-8 bg-gray-50 p-6 rounded-md">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 pl-3 border-l-4 border-red-500">Part 2: Relationship Expectations</h2>
                 
-                <label for="future-5">Where do you see yourself in 5 years?</label>
-                <textarea id="future-5" name="future-5" rows="2"></textarea>
+                <div class="mb-6">
+                    <h3 class="text-xl font-medium text-blue-600 mb-3">Time Together vs. Independence</h3>
+                    
+                    <div class="mb-4">
+                        <label for="days-together" class="block mb-2">How many days per week do you ideally want to spend with your partner?</label>
+                        <input type="number" min="0" max="7" id="days-together" name="days-together" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="activities-together" class="block mb-2">What activities do you prefer to do together?</label>
+                        <textarea id="activities-together" name="activities-together" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="activities-independent" class="block mb-2">What activities do you prefer to do independently?</label>
+                        <textarea id="activities-independent" name="activities-independent" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="recharge" class="block mb-2">How do you recharge after a difficult day?</label>
+                        <textarea id="recharge" name="recharge" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                </div>
                 
-                <label for="future-10">Where do you see yourself in 10 years?</label>
-                <textarea id="future-10" name="future-10" rows="2"></textarea>
+                <div class="mb-6">
+                    <h3 class="text-xl font-medium text-blue-600 mb-3">Communication Preferences</h3>
+                    
+                    <div class="mb-4">
+                        <label for="comm-frequency" class="block mb-2">How often do you expect to communicate when apart?</label>
+                        <input type="text" id="comm-frequency" name="comm-frequency" 
+                               class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                    
+                    <p class="mb-2">Preferred communication methods (rank 1-5):</p>
+                    
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="number" min="1" max="5" id="text-rank" name="text-rank" 
+                                   class="w-16 p-2 border border-gray-300 rounded">
+                            <label for="text-rank" class="ml-3">Text messages</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="number" min="1" max="5" id="phone-rank" name="phone-rank" 
+                                   class="w-16 p-2 border border-gray-300 rounded">
+                            <label for="phone-rank" class="ml-3">Phone calls</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="number" min="1" max="5" id="video-rank" name="video-rank" 
+                                   class="w-16 p-2 border border-gray-300 rounded">
+                            <label for="video-rank" class="ml-3">Video calls</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="number" min="1" max="5" id="inperson-rank" name="inperson-rank" 
+                                   class="w-16 p-2 border border-gray-300 rounded">
+                            <label for="inperson-rank" class="ml-3">In-person conversations</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="number" min="1" max="5" id="written-rank" name="written-rank" 
+                                   class="w-16 p-2 border border-gray-300 rounded">
+                            <label for="written-rank" class="ml-3">Written notes/letters</label>
+                        </div>
+                    </div>
+                </div>
                 
-                <label for="shared-vision">How important is it that your partner shares these specific visions?</label>
-                <input type="text" id="shared-vision" name="shared-vision">
-            </div>
-        </div>
-        
-        <div class="section">
-            <h2>Part 3: Life Decisions</h2>
-            <p>Rate how you would prioritize the following situations (1 = your preference strongly matters, 5 = your partner's preference strongly matters):</p>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="living-decision" name="living-decision">
-                <label for="living-decision">Deciding where to live</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="finances-decision" name="finances-decision">
-                <label for="finances-decision">How to manage finances</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="friends-decision" name="friends-decision">
-                <label for="friends-decision">How often to socialize with friends</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="family-decision" name="family-decision">
-                <label for="family-decision">How often to see family</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="career-decision" name="career-decision">
-                <label for="career-decision">Career decisions that affect both of you</label>
+                <div class="mb-4">
+                    <h3 class="text-xl font-medium text-blue-600 mb-3">Future Planning</h3>
+                    
+                    <div class="mb-4">
+                        <label for="future-3" class="block mb-2">Where do you see yourself in 3 years?</label>
+                        <textarea id="future-3" name="future-3" rows="2" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="future-5" class="block mb-2">Where do you see yourself in 5 years?</label>
+                        <textarea id="future-5" name="future-5" rows="2" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="future-10" class="block mb-2">Where do you see yourself in 10 years?</label>
+                        <textarea id="future-10" name="future-10" rows="2" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="shared-vision" class="block mb-2">How important is it that your partner shares these specific visions?</label>
+                        <input type="text" id="shared-vision" name="shared-vision" 
+                               class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                </div>
             </div>
             
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="travel-decision" name="travel-decision">
-                <label for="travel-decision">Travel and vacation planning</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="household-decision" name="household-decision">
-                <label for="household-decision">Daily household responsibilities</label>
-            </div>
-            
-            <div class="ranking-item">
-                <input type="number" min="1" max="5" id="purchases-decision" name="purchases-decision">
-                <label for="purchases-decision">Major purchases</label>
-            </div>
-        </div>
-        
-        <div class="section">
-            <h2>Part 4: Conflict Resolution</h2>
-            
-            <div class="question">
-                <label for="my-conflict">When disagreements arise, I typically:</label>
-                <textarea id="my-conflict" name="my-conflict" rows="3"></textarea>
+            <!-- Part 3: Life Decisions -->
+            <div class="mb-8 bg-gray-50 p-6 rounded-md">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 pl-3 border-l-4 border-red-500">Part 3: Life Decisions</h2>
+                <p class="mb-4">Rate how you would prioritize the following situations (1 = your preference strongly matters, 5 = your partner's preference strongly matters):</p>
                 
-                <label for="partner-conflict">I prefer my partner to address conflicts by:</label>
-                <textarea id="partner-conflict" name="partner-conflict" rows="3"></textarea>
-                
-                <label for="difficult-behavior">I find it difficult when my partner:</label>
-                <textarea id="difficult-behavior" name="difficult-behavior" rows="3"></textarea>
-                
-                <label for="when-upset">When I'm upset, I need:</label>
-                <textarea id="when-upset" name="when-upset" rows="3"></textarea>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="living-decision" name="living-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="living-decision" class="ml-3 flex-grow">Deciding where to live</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="finances-decision" name="finances-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="finances-decision" class="ml-3 flex-grow">How to manage finances</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="friends-decision" name="friends-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="friends-decision" class="ml-3 flex-grow">How often to socialize with friends</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="family-decision" name="family-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="family-decision" class="ml-3 flex-grow">How often to see family</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="career-decision" name="career-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="career-decision" class="ml-3 flex-grow">Career decisions that affect both of you</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="travel-decision" name="travel-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="travel-decision" class="ml-3 flex-grow">Travel and vacation planning</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="household-decision" name="household-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="household-decision" class="ml-3 flex-grow">Daily household responsibilities</label>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-white rounded shadow-sm hover:bg-blue-50 transition">
+                        <input type="number" min="1" max="5" id="purchases-decision" name="purchases-decision" 
+                               class="w-16 p-2 border border-gray-300 rounded">
+                        <label for="purchases-decision" class="ml-3 flex-grow">Major purchases</label>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="section">
-            <h2>Part 5: Expectations of Partner</h2>
-            <p>Complete these sentences:</p>
             
-            <div class="question">
-                <label for="valued-qualities">1. The qualities I value most in my partner are:</label>
-                <textarea id="valued-qualities" name="valued-qualities" rows="3"></textarea>
+            <!-- Part 4: Conflict Resolution -->
+            <div class="mb-8 bg-gray-50 p-6 rounded-md">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 pl-3 border-l-4 border-red-500">Part 4: Conflict Resolution</h2>
                 
-                <label for="prioritize-relationship">2. I expect my partner to prioritize our relationship by:</label>
-                <textarea id="prioritize-relationship" name="prioritize-relationship" rows="3"></textarea>
-                
-                <label for="support-goals">3. I expect my partner to support my goals by:</label>
-                <textarea id="support-goals" name="support-goals" rows="3"></textarea>
-                
-                <label for="no-compromise">4. I need my partner to understand that I cannot compromise on:</label>
-                <textarea id="no-compromise" name="no-compromise" rows="3"></textarea>
-                
-                <label for="flexible-about">5. I am willing to be flexible about:</label>
-                <textarea id="flexible-about" name="flexible-about" rows="3"></textarea>
+                <div class="space-y-4">
+                    <div>
+                        <label for="my-conflict" class="block mb-2">When disagreements arise, I typically:</label>
+                        <textarea id="my-conflict" name="my-conflict" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="partner-conflict" class="block mb-2">I prefer my partner to address conflicts by:</label>
+                        <textarea id="partner-conflict" name="partner-conflict" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="difficult-behavior" class="block mb-2">I find it difficult when my partner:</label>
+                        <textarea id="difficult-behavior" name="difficult-behavior" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="when-upset" class="block mb-2">When I'm upset, I need:</label>
+                        <textarea id="when-upset" name="when-upset" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="buttons no-print">
-            <button type="button" onclick="saveAsPDF()" class="download-btn">Download as PDF</button>
-            <button type="button" onclick="resetForm()">Reset Form</button>
-        </div>
-        
-        <!-- Hidden elements that only show in PDF -->
-        <div class="pdf-header">
-            <h2>Relationship Compatibility Questionnaire Results</h2>
-            <p>Completed on: <span id="completion-date"></span></p>
+            
+            <!-- Part 5: Expectations of Partner -->
+            <div class="mb-8 bg-gray-50 p-6 rounded-md">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 pl-3 border-l-4 border-red-500">Part 5: Expectations of Partner</h2>
+                <p class="mb-4">Complete these sentences:</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="valued-qualities" class="block mb-2">1. The qualities I value most in my partner are:</label>
+                        <textarea id="valued-qualities" name="valued-qualities" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="prioritize-relationship" class="block mb-2">2. I expect my partner to prioritize our relationship by:</label>
+                        <textarea id="prioritize-relationship" name="prioritize-relationship" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="support-goals" class="block mb-2">3. I expect my partner to support my goals by:</label>
+                        <textarea id="support-goals" name="support-goals" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="no-compromise" class="block mb-2">4. I need my partner to understand that I cannot compromise on:</label>
+                        <textarea id="no-compromise" name="no-compromise" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="flexible-about" class="block mb-2">5. I am willing to be flexible about:</label>
+                        <textarea id="flexible-about" name="flexible-about" rows="3" 
+                                  class="w-full p-2 border border-gray-300 rounded"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="text-center mt-8 no-print">
+                <button type="button" onclick="generatePDF()" 
+                        class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded mr-4 shadow transition">
+                    Download as PDF
+                </button>
+                <button type="button" onclick="resetForm()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded shadow transition">
+                    Reset Form
+                </button>
+            </div>
+            
+            <!-- Hidden element for PDF footer -->
+            <div id="pdf-footer" class="hidden mt-4 text-sm text-gray-500 text-center">
+                <p>Relationship Compatibility Questionnaire - Completed on <span id="completion-date"></span></p>
+            </div>
         </div>
     </div>
 
     <script>
-        // Set up date for PDF export
+        // Set today's date for PDF
         document.getElementById('completion-date').textContent = new Date().toLocaleDateString();
         
-        // Function to save as PDF
-        function saveAsPDF() {
-            // Import modules from CDN
-            const { jsPDF } = window.jspdf;
+        // Function to generate PDF using html2pdf library
+        function generatePDF() {
+            // Show the footer in the PDF
+            document.getElementById('pdf-footer').classList.remove('hidden');
             
-            // Show "printing" elements
-            document.querySelector('.pdf-header').style.display = 'block';
+            // Get the form element
+            const element = document.getElementById('questionnaire-form');
             
-            // Create new PDF document
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = doc.internal.pageSize.getWidth();
-            const pdfHeight = doc.internal.pageSize.getHeight();
-            const margin = 10; // margin in mm
+            // Configure PDF options
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: 'relationship_questionnaire.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
             
-            // Get form element
-            const form = document.getElementById('questionnaire-form');
-            
-            // Temporarily hide buttons for PDF capture
-            const buttons = document.querySelector('.buttons');
+            // Hide buttons temporarily
+            const buttons = document.querySelector('.no-print');
             buttons.style.display = 'none';
             
-            // Use html2canvas to take a screenshot
-            html2canvas(form, {
-                scale: 2, // Higher resolution
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
-                // Calculate the number of pages based on content height
-                const contentHeight = canvas.height;
-                const contentWidth = canvas.width;
-                const pageHeight = (pdfHeight - 2 * margin) * contentWidth / (pdfWidth - 2 * margin);
-                const totalPages = Math.ceil(contentHeight / pageHeight);
-                
-                // Add each canvas section as a separate page
-                for (let i = 0; i < totalPages; i++) {
-                    // If we're on page 2 or higher, add a new page
-                    if (i > 0) {
-                        doc.addPage();
-                    }
-                    
-                    // Calculate the slice of the canvas for this page
-                    const sourceY = i * pageHeight;
-                    const sliceHeight = Math.min(pageHeight, contentHeight - sourceY);
-                    
-                    // Convert the canvas slice to an image
-                    const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                    
-                    // Add the slice to the PDF
-                    doc.addImage(
-                        imgData, 
-                        'JPEG', 
-                        margin, 
-                        margin, 
-                        pdfWidth - 2 * margin, 
-                        (pdfWidth - 2 * margin) * sliceHeight / contentWidth,
-                        '', 
-                        'FAST',
-                        0,
-                        i * -pageHeight
-                    );
-                }
-                
-                // Save the PDF
-                doc.save('relationship_questionnaire.pdf');
-                
-                // Show buttons again and hide printing elements
+            // Generate PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore buttons and hide footer
                 buttons.style.display = 'block';
-                document.querySelector('.pdf-header').style.display = 'none';
+                document.getElementById('pdf-footer').classList.add('hidden');
             });
         }
         
         // Function to reset form
         function resetForm() {
             if (confirm('Are you sure you want to reset all your answers?')) {
-                document.getElementById('questionnaire-form').reset();
+                // Get all input elements
+                const inputs = document.querySelectorAll('input, textarea');
+                
+                // Clear each input
+                inputs.forEach(input => {
+                    input.value = '';
+                });
             }
         }
         
-        // Initialize the form
+        // Input validation for number fields
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up validation for number inputs
             const numberInputs = document.querySelectorAll('input[type="number"]');
+            
             numberInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     const value = parseInt(this.value);
